@@ -1,0 +1,51 @@
+version: '2'
+
+networks:
+  web:
+  data:
+
+services:
+  nginx:
+    container_name: pay-demo-nginx-frontend
+    image: nginx
+    networks:
+      - web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
+      - ./dist/:/var/www/html/:ro
+    restart: always
+
+
+  # redis:
+  #   container_name: line-pay-redis
+  #   image: redis
+  #   networks:
+  #     - data
+  #   restart: always
+
+  # postgres:
+  #   container_name: line-pay-postgres
+  #   ports:
+  #     - "127.0.0.1:5432:5432"
+  #   image: postgres:15
+  #   networks:
+  #     - data
+  #   environment:
+  #     POSTGRES_DB: ${DB_NAME}
+  #     POSTGRES_USER: ${DB_USER}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #   restart: always
+
+    #mysql:
+    #container_name: line-pay-mysql
+    #ports:
+    #  - "127.0.0.1:3306:3306"
+    #image: mysql
+    #networks:
+    #- data
+    #environment:
+    #MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    #MYSQL_USER: ${DB_USER}
+    #MYSQL_PASSWORD: ${DB_PASSWORD}
