@@ -6,7 +6,7 @@ networks:
 
 services:
   nginx:
-    container_name: pay-demo-nginx
+    container_name: pay-demo-nginx-backend
     image: nginx
     networks:
       - web
