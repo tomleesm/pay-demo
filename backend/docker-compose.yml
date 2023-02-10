@@ -4,57 +4,28 @@ networks:
   web:
   data:
 
+# nginx 設定中的 fastcgi_param 如果要生效，則程式碼在容器 nginx 和 php 放置的位置要相同
+# 所以 volumes 都有一行一樣的 .:/var/www/html
+# 參考 https://stackoverflow.com/questions/71475528/i-get-fastcgi-primary-script-unknown-error-in-a-nginx-php-fpm-containers-sit
 services:
   nginx:
-    container_name: pay-demo-nginx-backend
+    container_name: nginx
     image: nginx
     networks:
       - web
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:80"
     volumes:
       - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
-      - .:/var/www/html/
+      - .:/var/www/html
     restart: always
 
-  backend:
-    container_name: pay-demo-backend
-    image: crunchgeek/php-fpm:7.4-r2
+  php:
+    container_name: php
+    image: webdevops/php:7.4-alpine
     networks:
       - web
       - data
     volumes:
-      - .:/var/www/html/
+      - .:/var/www/html
     restart: always
-
-  # redis:
-  #   container_name: line-pay-redis
-  #   image: redis
-  #   networks:
-  #     - data
-  #   restart: always
-
-  # postgres:
-  #   container_name: line-pay-postgres
-  #   ports:
-  #     - "127.0.0.1:5432:5432"
-  #   image: postgres:15
-  #   networks:
-  #     - data
-  #   environment:
-  #     POSTGRES_DB: ${DB_NAME}
-  #     POSTGRES_USER: ${DB_USER}
-  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
-  #   restart: always
-
-    #mysql:
-    #container_name: line-pay-mysql
-    #ports:
-    #  - "127.0.0.1:3306:3306"
-    #image: mysql
-    #networks:
-    #- data
-    #environment:
-    #MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    #MYSQL_USER: ${DB_USER}
-    #MYSQL_PASSWORD: ${DB_PASSWORD}
